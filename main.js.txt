@@ -1,0 +1,35 @@
+
+// Function to load CSV file asynchronously
+async function loadCSV(url) {
+  const response = await fetch(url);
+  const text = await response.text();
+  return text;
+}
+
+// Load CSV file into a data variable with headers as keys
+const csvData = await loadCSV('data.csv');
+const rows = csvData.split('\n');
+const headers = rows[0].split(',');
+const data = [];
+
+for (let i = 1; i < rows.length; i++) {
+  const values = rows[i].split(',');
+  const row = {};
+  for (let j = 0; j < headers.length; j++) {
+      row[headers[j].trim()] = values[j].trim();
+  }
+  data.push(row);
+}
+
+// Function to pick out a value by header/ID
+function getValue(header, id) {
+  const row = data.find(entry => parseInt(entry.ID) === parseInt(id));
+  if (!row) {
+      return "ID not found";
+  }
+  return row[header];
+}
+
+// Usage Examples
+console.log(getValue('Model', 1));
+console.log(getValue('Cost', 1));
